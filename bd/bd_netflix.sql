@@ -135,3 +135,33 @@ VALUES (
         'Irlanda',
         '1976-05-25'
     );
+
+USE netflix;
+
+SELECT * FROM movies;
+
+SELECT title, genre FROM movies WHERE year>1995;
+
+SELECT * FROM movies WHERE category='Top 10';
+
+UPDATE movies SET year=1997 WHERE title='La vita è bella';
+
+SELECT * FROM movies;
+
+SELECT * FROM actors;
+
+SELECT
+    name,
+    lastname,
+    birthday
+FROM actors
+WHERE
+    birthday BETWEEN '1950-01-01' AND '1960-01-01';
+
+SELECT name, lastname FROM actors WHERE country='Estados Unidos';
+
+SELECT * FROM users WHERE plan_details='Standard';
+
+DELETE FROM users WHERE user like 'M%';
+
+SELECT * FROM users;
