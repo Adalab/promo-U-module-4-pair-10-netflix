@@ -1,6 +1,6 @@
-CREATE DATABASE Netflix;
+CREATE DATABASE netflix;
 
-USE Netflix;
+USE netflix;
 
 CREATE TABLE
     movies(
