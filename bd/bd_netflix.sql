@@ -104,8 +104,7 @@ VALUES (
         'Rachel',
         'rachel@gmail.com',
         'Standard'
-    ),
-;
+    );
 
 INSERT INTO
     actors (
