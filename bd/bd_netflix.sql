@@ -185,3 +185,14 @@ WHERE name = 'Cillian' AND lastname = 'Murphy';
 SELECT * FROM actors;
 
 UPDATE actors SET name='Cillian' WHERE name='Cillian '; -- (Había un espacio después de Cillian y no me cogía la imagen)
+
+-- del día 30 de octubre: 4.3 Diagramas y relaciones MySQL
+
+SELECT * FROM netflix.users;
+
+SELECT users.idUser, users.name, movies.idMovies, movies.title
+FROM users 
+INNER JOIN users_has_movies
+ON users.idUser = users_has_movies.users_idUser
+INNER JOIN movies
+ON movies.idMovies = users_has_movies.movies_idMovies;

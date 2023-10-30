@@ -138,13 +138,12 @@ VALUES (
 
 USE netflix;
 
+-- para ver movies:
 SELECT * FROM movies;
 
 SELECT title, genre FROM movies WHERE year>1995;
 SELECT * FROM movies WHERE category='Top 10';
 UPDATE movies SET year=1997 WHERE title='La vita è bella';
-
-SELECT * FROM actors;
 
 SELECT
     name,
@@ -158,4 +157,42 @@ SELECT name, lastname FROM actors WHERE country='Estados Unidos';
 SELECT * FROM users WHERE plan_details='Standard';
 DELETE FROM users WHERE user like 'M%';
 
+-- para ver users:
 SELECT * FROM users;
+
+-- Modificado por Diana // Bonus del viernes pasado:
+UPDATE movies SET image = 'https://pics.filmaffinity.com/oppenheimer-828933592-mmed.jpg' WHERE title = 'Oppenheimer';
+
+ALTER TABLE actors ADD COLUMN imgActor varchar(1000);
+-- UPDATE en lugar de INSERT INTO porque INSERT INTO crearía una fila nueva y lo que queremos es modificar las filas que ya hay /!\
+UPDATE actors
+SET imgActor = 'https://pics.filmaffinity.com/tom_hanks-217077860751094-nm_200.jpg'
+WHERE name = 'Tom' AND lastname = 'Hanks';
+
+UPDATE actors
+SET imgActor = 'https://pics.filmaffinity.com/roberto_benigni-191379476823315-nm_200.jpg'
+WHERE name = 'Roberto' AND lastname = 'Benigni';
+
+UPDATE actors
+SET imgActor = 'https://pics.filmaffinity.com/john_travolta-215026180777265-nm_200.jpg'
+WHERE name = 'John' AND lastname = 'Travolta';
+
+UPDATE actors
+SET imgActor = 'https://pics.filmaffinity.com/cillian_murphy-117743568573693-nm_200.jpg'
+WHERE name = 'Cillian' AND lastname = 'Murphy';
+
+-- para ver actors:
+SELECT * FROM actors;
+
+UPDATE actors SET name='Cillian' WHERE name='Cillian '; -- (Había un espacio después de Cillian y no me cogía la imagen)
+
+-- del día 30 de octubre: 4.3 Diagramas y relaciones MySQL
+
+SELECT * FROM netflix.users;
+
+SELECT users.idUser, users.name, movies.idMovies, movies.title
+FROM users 
+INNER JOIN users_has_movies
+ON users.idUser = users_has_movies.users_idUser
+INNER JOIN movies
+ON movies.idMovies = users_has_movies.movies_idMovies;
