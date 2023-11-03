@@ -28,18 +28,36 @@ server.listen(serverPort, () => {
 
 server.get('/movies', async (req, res) => {
   // (req, res): Require: para cuando envíen datos | Response: enviar desde el server datos al front
+  const genreFilterParam = req.query.genre;
+  const sortFilterParam = req.query.sort;
+  let queryMovies = '';
 
   // obtener los datos de la bbdd
   // 1.- obtener la conexión
   const conn = await getConnection();
   // 2.- consulta de la bbdd: obtener todas las alumnas
-  const queryMovies = 'SELECT * FROM movies';
+  if (genreFilterParam === '') {
+    queryMovies = 'SELECT * FROM movies';
+  } else if (genreFilterParam === 'Biográfico') {
+    queryMovies = "SELECT * FROM movies WHERE genre='Biográfico'";
+  } else if (genreFilterParam === 'Crimen') {
+    queryMovies = "SELECT * FROM movies WHERE genre='Crimen'";
+  } else if (genreFilterParam === 'Comedia') {
+    queryMovies = "SELECT * FROM movies WHERE genre='Comedia'";
+  }
+
+  if (sortFilterParam === 'asc') {
+    queryMovies = 'SELECT * FROM movies order by title asc';
+  } else if (sortFilterParam === 'desc') {
+    queryMovies = 'SELECT * FROM movies order by title desc';
+  }
+
   // 3.- ejecutar la consulta
   const [results] = await conn.query(queryMovies);
   // [results] <- con [] porque de todo lo que trae, dame solo los resultados
   console.log(results);
   /* res.json(results); */
-
+  console.log('genre: ' + req.query.genre);
   res.json({
     success: true,
     movies: results,
