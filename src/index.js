@@ -7,6 +7,9 @@ const server = express();
 server.use(cors());
 server.use(express.json({ limit: '25mb' }));
 
+// Instalar y configurar EJS
+server.set('view engine', 'ejs');
+
 // conexión a la base de datos
 async function getConnection() {
   const connection = await mysql.createConnection({
@@ -30,7 +33,7 @@ server.get('/movies', async (req, res) => {
   // (req, res): Require: para cuando envíen datos | Response: enviar desde el server datos al front
   const genreFilterParam = req.query.genre;
   const sortFilterParam = req.query.sort;
-  let queryMovies = '';
+  let queryMovies = 'SELECT * FROM movies';
 
   // obtener los datos de la bbdd
   // 1.- obtener la conexión
@@ -58,11 +61,25 @@ server.get('/movies', async (req, res) => {
   console.log(results);
   /* res.json(results); */
   console.log('genre: ' + req.query.genre);
+  conn.end();
   res.json({
     success: true,
     movies: results,
   });
 });
+
+server.get('/movie/:idMovies', async (req, res) => {
+
+  console.log('req.params.idMovies', req.params.idMovies)
+  
+  const queryMovie = 'SELECT * FROM movies WHERE idMovies=?;';
+  const conn = await getConnection(); 
+  const [results] = await conn.query(queryMovie, [req.params.idMovies]); 
+  res.render('movieDetail', { movie: results[0] })
+
+  conn.end();
+
+})
 
 //servidor de estáticos
 const pathServerStatic = './public_html';
