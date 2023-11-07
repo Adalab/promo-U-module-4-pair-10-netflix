@@ -2,7 +2,6 @@
 
 const sendLoginToApi = (data) => {
   console.log('Se están enviando datos al login:', data);
-
   return fetch(
     'http://localhost:4000/login',
     {

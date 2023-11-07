@@ -88,6 +88,31 @@ server.get('/movie/:idMovies', async (req, res) => {
   res.render('movieDetail', foundMovie);
 });
 
+//4.8.2 Login
+server.post('/login', async (req, res) => {
+  //usuario y contraseña
+  const email = req.body.email;
+  const password = req.body.password;
+  //consulta mysql
+  const queryLogin = 'SELECT * FROM users WHERE idUser=?';
+  const conn = await getConnection();
+  const [users] = await conn.query(queryLogin, [email, password]);
+  const user = users[0];
+  console.log(email, password);
+  conn.end();
+  if (user === null) {
+    res.render({
+      success: false,
+      errorMessage: 'Usuaria/o no encontrada/o',
+    });
+  } else {
+    res.render({
+      success: true,
+      userId: 'id_de_la_usuaria_encontrada',
+    });
+  }
+});
+
 //4.8.1. Registro de nuevas usuarias
 server.post('/sign-up', async (req, res) => {
   //usuario y contraseña
@@ -98,7 +123,7 @@ server.post('/sign-up', async (req, res) => {
   const conn = await getConnection();
   const [users] = await conn.query(sql, [email, password]);
   const user = users[0];
-
+  conn.end();
   /*const isOkPass =
     user === null
       ? false
