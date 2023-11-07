@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 // create and config server
 const server = express();
 server.use(cors());
@@ -22,6 +23,11 @@ async function getConnection() {
   connection.connect;
   return connection;
 }
+
+/*const generateToken = (payload) => {
+  const token = jwt.sign(payload, 'secreto', { expiresIn: '1h' });
+  return token;
+};*/
 
 // init express aplication
 const serverPort = 4000;
@@ -68,19 +74,64 @@ server.get('/movies', async (req, res) => {
   });
 });
 
+//1. Consigue el id de la película que se va a renderizar
 server.get('/movie/:idMovies', async (req, res) => {
-
-  console.log('req.params.idMovies', req.params.idMovies)
-  
-  const queryMovie = 'SELECT * FROM movies WHERE idMovies=?;';
-  const conn = await getConnection(); 
-  const [results] = await conn.query(queryMovie, [req.params.idMovies]); 
-  res.render('movieDetail', { movie: results[0] })
-
+  console.log('req.params.idMovies', req.params.idMovies);
+  const queryMovie = 'SELECT * FROM movies WHERE idMovies=?';
+  const conn = await getConnection();
+  const [results] = await conn.query(queryMovie, [req.params.idMovies]);
+  res.render('movieDetail', { movie: results[0] });
   conn.end();
+  //2. Obtén la película
+  const foundMovie = results[0];
+  console.log('foundMovie', foundMovie);
+  res.render('movieDetail', foundMovie);
+});
 
-})
+//4.8.1. Registro de nuevas usuarias
+server.post('/sign-up', async (req, res) => {
+  //usuario y contraseña
+  const email = req.body.email;
+  const password = req.body.password;
+  //consulta mysql
+  const sql = 'INSERT INTO users (email, password) VALUES(?,?)';
+  const conn = await getConnection();
+  const [users] = await conn.query(sql, [email, password]);
+  const user = users[0];
+
+  /*const isOkPass =
+    user === null
+      ? false
+      : await bcrypt.compare(password, user.hashed_password);
+
+  if (!(isOkPass && user)) {
+    return res
+      .sendStatus(401)
+      .json({ success: false, error: 'Credenciales inválidas' }); // no autorizado
+  }
+
+  const infoToken = {
+    email: user.email,
+    id: user.id,
+  };
+
+  const token = generateToken(infoToken); // infoToken es el payload*/
+  res.json({
+    success: true,
+    userId: 'nuevo id añadido',
+  });
+});
 
 //servidor de estáticos
 const pathServerStatic = './public_html';
 server.use(express.static(pathServerStatic));
+
+/*1. Consigue el id de la película que se va a renderizar
+server.get('/movie/:idMovies', async (req, res) => {
+  console.log('req.params.idMovies', req.params.idMovies);
+  const queryMovie = 'SELECT * FROM movies WHERE idMovies=?;';
+  const conn = await getConnection();
+  const [results] = await conn.query(queryMovie, [req.params.idMovies]);
+  res.render('movieDetail', { movie: results[0] });
+  conn.end();
+});*/
