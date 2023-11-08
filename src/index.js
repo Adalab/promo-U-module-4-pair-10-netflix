@@ -94,19 +94,20 @@ server.post('/login', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   //consulta mysql
-  const queryLogin = 'SELECT * FROM users WHERE idUser=?';
+  console.log(req.body);
+  const queryLogin = 'SELECT * FROM users WHERE email=? AND password=?';
   const conn = await getConnection();
   const [users] = await conn.query(queryLogin, [email, password]);
   const user = users[0];
   console.log(email, password);
   conn.end();
   if (user === null) {
-    res.render({
+    res.json({
       success: false,
       errorMessage: 'Usuaria/o no encontrada/o',
     });
   } else {
-    res.render({
+    res.json({
       success: true,
       userId: 'id_de_la_usuaria_encontrada',
     });
@@ -148,8 +149,10 @@ server.post('/sign-up', async (req, res) => {
 });
 
 //servidor de estáticos
-const pathServerStatic = './public_html';
+const pathServerStatic = './src/public-react'; 
 server.use(express.static(pathServerStatic));
+
+module.exports = server;
 
 /*1. Consigue el id de la película que se va a renderizar
 server.get('/movie/:idMovies', async (req, res) => {
