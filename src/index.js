@@ -149,8 +149,14 @@ server.post('/sign-up', async (req, res) => {
 });
 
 //servidor de estáticos
-const pathServerStatic = './src/public-react'; 
+const pathServerStatic = './src/public-react';
 server.use(express.static(pathServerStatic));
+
+const pathServerStaticImages = './src/public-movies-images';
+server.use(express.static(pathServerStaticImages));
+
+const pathServerStaticStyles = './src/public-css';
+server.use(express.static(pathServerStaticStyles));
 
 module.exports = server;
 

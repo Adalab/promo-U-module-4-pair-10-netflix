@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
     <h1>Detalle de la pelicula</h1>
     <main>
         <h2 class="card__title">Nombre de la pelicula: <%= movie.title %></h2>
+        <ul>
+            <li class="card">
+                <h2 class="card__title"><%= movie.title %></h2>
+               <img class="card__img" src="<%= movie.image %>" alt="" />
+               <p class="card__description"><%= movie.genre %></p>
+              </li>
+        </ul>
     </main>
 </body>
 </html>
